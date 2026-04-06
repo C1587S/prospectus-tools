@@ -32,7 +32,7 @@ def get_weights(rcp, config):
 def get_weights_april2016(rcp):
     weights = {}
 
-    with open('/project/cil/gcp/climate/BCSD/SMME/SMME-weights/' + rcp + '_2090_SMME_edited_for_April_2016.tsv', 'rU') as tsvfp:
+    with open('/project/cil/gcp/climate/BCSD/SMME/SMME-weights/' + rcp + '_2090_SMME_edited_for_April_2016.tsv', 'r') as tsvfp:
         reader = csv.reader(tsvfp, delimiter='\t')
         header = next(reader)
         for row in reader:
@@ -50,7 +50,7 @@ def get_weights_march2018(rcp, config):
 
     filepath = march2018_filepath(rcp, config)
     
-    with open(filepath, 'rU') as tsvfp:
+    with open(filepath, 'r') as tsvfp:
         reader = csv.reader(tsvfp, delimiter='\t')
         header = next(reader)
         for row in reader:

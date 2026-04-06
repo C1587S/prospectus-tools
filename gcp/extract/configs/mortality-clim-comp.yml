@@ -16,6 +16,6 @@ do-gcmweights: true
 evalqvals: ['mean', 0.17, 0.5, 0.83]
 
 output-format: edfcsv
-file-organize: [rcp, ssp, iam]
+file-organize: [rcp, ssp]
 
 ignore-missing: no

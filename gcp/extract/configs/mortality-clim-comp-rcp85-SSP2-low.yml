@@ -1,0 +1,14 @@
+results-root: /project/cil/gcp/outputs/mortality_new-socioeconomics/impacts-darwin/montecarlo
+output-dir: /project/cil/gcp/outputs/mortality_new-socioeconomics/impacts-darwin/extracted/low
+do-montecarlo: yes
+only-rcp: rcp85
+only-ssp: SSP2
+only-iam: low
+only-models: all
+column: rebased
+allow-partial: 1
+do-gcmweights: true
+evalqvals: ['mean', 0.17, 0.5, 0.83]
+output-format: edfcsv
+file-organize: [rcp, ssp]
+ignore-missing: no

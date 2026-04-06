@@ -21,7 +21,7 @@ __version__ = "$Revision$"
 import os, csv
 import numpy as np
 from statsmodels.distributions.empirical_distribution import StepFunction
-import configs
+from . import configs
 
 def get_weights(rcp, config):
     weights = get_weights_april2016(rcp)
@@ -32,9 +32,9 @@ def get_weights(rcp, config):
 def get_weights_april2016(rcp):
     weights = {}
 
-    with open('/shares/gcp/climate/BCSD/SMME/SMME-weights/' + rcp + '_2090_SMME_edited_for_April_2016.tsv', 'rU') as tsvfp:
+    with open('/project/cil/gcp/climate/BCSD/SMME/SMME-weights/' + rcp + '_2090_SMME_edited_for_April_2016.tsv', 'rU') as tsvfp:
         reader = csv.reader(tsvfp, delimiter='\t')
-        header = reader.next()
+        header = next(reader)
         for row in reader:
             model = row[1].split('_')[0].strip('*').lower()
             weight = float(row[2])
@@ -52,7 +52,7 @@ def get_weights_march2018(rcp, config):
     
     with open(filepath, 'rU') as tsvfp:
         reader = csv.reader(tsvfp, delimiter='\t')
-        header = reader.next()
+        header = next(reader)
         for row in reader:
             model = row[1].strip('*').lower()
             if '_' in model:
@@ -66,7 +66,7 @@ def get_weights_march2018(rcp, config):
     return weights
 
 def march2018_filepath(rcp, config, always=False):
-    weights_dir = '/shares/gcp/climate/BCSD/SMME/SMME-weights'
+    weights_dir = '/project/cil/gcp/climate/BCSD/SMME/SMME-weights'
     
     only_models, drop_models = configs.included_models(config)
 
@@ -81,13 +81,13 @@ def march2018_filepath(rcp, config, always=False):
         if always or os.path.join(weights_dir, preferred_filename):
             return os.path.join(weights_dir, preferred_filename)
         else:
-            print "WARNING: " + preferred_filename + " does not exist."
+            print(("WARNING: " + preferred_filename + " does not exist."))
         
     return os.path.join(weights_dir, rcp + '_SMME_weights.tsv')
 
 def weighted_values(values, weights):
     """Takes a dictionary of model => value"""
-    models = values.keys()
+    models = list(values.keys())
     values_list = [values[model] for model in models if model in weights]
     weights_list = [weights[model] for model in models if model in weights]
 
@@ -107,7 +107,7 @@ class WeightedECDF(StepFunction):
         
         self.expected = sum(np.array(values) * np.array(weights)) / sum(weights)
 
-        order = sorted(range(len(values)), key=lambda ii: values[ii])
+        order = sorted(list(range(len(values))), key=lambda ii: values[ii])
         self.values = np.array([values[ii] for ii in order])
         self.weights = [weights[ii] for ii in order]
 
@@ -140,7 +140,7 @@ class WeightedECDF(StepFunction):
     @staticmethod
     def encode_evalqvals(evalqvals):
         encoder = {'mean': 2, 'sdev': 3}
-        return map(lambda p: p if isinstance(p, float) else encoder[p], evalqvals)
+        return [p if isinstance(p, float) else encoder[p] for p in evalqvals]
 
 if __name__ == '__main__':
     import sys
@@ -151,9 +151,9 @@ if __name__ == '__main__':
         if rcp == 'historical':
             continue
         weights = get_weights(rcp, {})
-        print weights
+        print(weights)
         for gcm in os.listdir(os.path.join(batchdir, rcp)):
             try:
-                print gcm, weights[gcm.lower()]
+                print((gcm, weights[gcm.lower()]))
             except:
-                print "Cannot find weight for %s under %s" % (gcm, rcp)
+                print(("Cannot find weight for %s under %s" % (gcm, rcp)))

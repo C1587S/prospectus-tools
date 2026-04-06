@@ -43,12 +43,12 @@ for region in data:
                 if bundles.deltamethod_vcv is not None:
                     value = bundles.deltamethod_vcv.dot(data[region][year][:, rr]).dot(data[region][year][:, rr])
                 else:
-                    value = data[region][year][rr]
+                    value = data[region][year]
                 writer.writerow([config['regionorder'][rr], year, value])
     else:
         for year in data[region]:
             if bundles.deltamethod_vcv is not None:
                 value = bundles.deltamethod_vcv.dot(data[region][year]).dot(data[region][year])
             else:
-                value = data[region][year][rr]
+                value = data[region][year]
             writer.writerow([region, year, value])
